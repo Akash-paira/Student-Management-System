@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
 def login_page(request):
     return render(request, "main_app/login.html")
@@ -30,4 +32,8 @@ def doLogin(request):
 
         return redirect("login")
 
+    return redirect("login")
+
+def logout_user(request):
+    logout(request)
     return redirect("login")
