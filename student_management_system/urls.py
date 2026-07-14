@@ -29,6 +29,53 @@ urlpatterns = [
     path("update_session/<str:session_id>/", hod_views.update_session, name="update_session"),
     path("delete_session/<str:session_id>/", hod_views.delete_session, name="delete_session"),
     path("logout/", views.logout_user, name="user_logout"),
+    path("add_staff/", hod_views.add_staff, name="add_staff"),
+    path("save_staff/", hod_views.save_staff, name="save_staff"),
+    path("manage_staff/", hod_views.manage_staff, name="manage_staff"),
+    path(
+    "check_email_availability/",
+    views.check_email_availability,
+    name="check_email_availability",
+    ),
+    path("edit_staff/<str:staff_id>/", hod_views.edit_staff, name="edit_staff"),
+    path("update_staff/<str:staff_id>/", hod_views.update_staff, name="update_staff"),
+    path("delete_staff/<str:staff_id>/", hod_views.delete_staff, name="delete_staff"),
+    path("add_student/", hod_views.add_student, name="add_student"),
+    path("save_student/", hod_views.save_student, name="save_student"),
+    path("manage_student/", hod_views.manage_student, name="manage_student"),
+    path("edit_student/<str:student_id>/", hod_views.edit_student, name="edit_student"),
+    path("update_student/<str:student_id>/", hod_views.update_student, name="update_student"),
+    path("delete_student/<str:student_id>/", hod_views.delete_student, name="delete_student"),
+    path(
+    "add_subject/",
+    hod_views.add_subject,
+    name="add_subject",
+),
+
+    path(
+        "save_subject/",
+        hod_views.save_subject,
+        name="save_subject",
+    ),
+
+    path(
+    "edit_subject/<str:subject_id>/",
+    hod_views.edit_subject,
+    name="edit_subject",
+),
+
+    path(
+            "update_subject/<str:subject_id>/",
+            hod_views.update_subject,
+            name="update_subject",
+        ),
+
+    path(
+            "delete_subject/<str:subject_id>/",
+            hod_views.delete_subject,
+            name="delete_subject",
+    ),
+    path("manage_subject/", hod_views.manage_subject, name="manage_subject"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -193,6 +193,7 @@
 from django import forms
 from .models import Course
 from .models import Session
+from .models import Staff, Course, CustomUser
 
 class CourseForm(forms.ModelForm):
     class Meta:
@@ -221,3 +222,106 @@ class SessionForm(forms.ModelForm):
                 "type": "date"
             }),
         }
+
+class StaffForm(forms.Form):
+
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={"class": "form-control"})
+    )
+
+    password = forms.CharField(
+    required=False,
+    widget=forms.PasswordInput(attrs={"class": "form-control"})
+)
+
+    gender = forms.ChoiceField(
+        choices=[
+            ("Male", "Male"),
+            ("Female", "Female")
+        ],
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+    address = forms.CharField(
+        widget=forms.Textarea(attrs={"class": "form-control"})
+    )
+
+    profile_pic = forms.ImageField(required=False)
+
+    course = forms.ModelChoiceField(
+        queryset=Course.objects.all(),
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+class StudentForm(forms.Form):
+
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={"class": "form-control"})
+    )
+
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    )
+
+    gender = forms.ChoiceField(
+        choices=[
+            ("Male", "Male"),
+            ("Female", "Female"),
+        ],
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+    address = forms.CharField(
+        widget=forms.Textarea(attrs={"class": "form-control"})
+    )
+
+    profile_pic = forms.ImageField(required=False)
+
+    course = forms.ModelChoiceField(
+        queryset=Course.objects.all(),
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+    session = forms.ModelChoiceField(
+        queryset=Session.objects.all(),
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+class SubjectForm(forms.Form):
+
+    subject_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"class": "form-control"}
+        )
+    )
+
+    course = forms.ModelChoiceField(
+        queryset=Course.objects.all(),
+        widget=forms.Select(
+            attrs={"class": "form-control"}
+        )
+    )
+
+    staff = forms.ModelChoiceField(
+        queryset=Staff.objects.all(),
+        widget=forms.Select(
+            attrs={"class": "form-control"}
+        )
+    )
+

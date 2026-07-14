@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.shortcuts import redirect
+from django.http import HttpResponse
+from main_app.models import CustomUser
 
 def login_page(request):
     return render(request, "main_app/login.html")
@@ -37,3 +39,12 @@ def doLogin(request):
 def logout_user(request):
     logout(request)
     return redirect("login")
+
+def check_email_availability(request):
+
+    email = request.POST.get("email")
+
+    if CustomUser.objects.filter(email=email).exists():
+        return HttpResponse(True)
+
+    return HttpResponse(False)

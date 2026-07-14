@@ -27,25 +27,39 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for staff in allStaff %}
+                                {% for staff in staffs %}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
-                                    <td>{{staff.last_name}}, {{staff.first_name}}</td>
-                                    <td>{{staff.email}}</td>
-                                    <td>{{staff.gender}}</td>
-                                    <td>{{staff.staff.course.name}}</td>
+                                    <td>{{ staff.admin.first_name }} {{ staff.admin.last_name }}</td>
+                                    <td>{{staff.admin.email}}</td>
+                                    <td>{{staff.admin.gender}}</td>
+                                    <td>{{staff.course.name}}</td>
                                     <td>
-                                        {% if staff.profile_pic == ""  %}
+                                        {% comment %} {% if staff.profile_pic == ""  %}
                                         No Image
                                         {% else %}
                                         <img class="img img-fluid mb-2" height="100" width="100"
-                                            src="{{staff.profile_pic}}" alt="">
-                                        {% endif %}
+                                            src="{{ staff.admin.profile_pic.url }}" alt="">
+                                        {% endif %} {% endcomment %}
+                                             {% if staff.admin.profile_pic %}
+                                                    <img src="{{ staff.admin.profile_pic.url }}"
+                                                        width="80"
+                                                        height="80"
+                                                        class="img-thumbnail">
+                                                {% else %}
+                                                    No Image
+                                                {% endif %}
                                     </td>
                                     <td>
-                                        <a href="{% url 'edit_staff' staff.staff.id %}" class="btn btn-primary">Edit</a> - 
-                                        <a href="{% url 'delete_staff' staff.staff.id %}" class="btn btn-danger" onclick="return confirm('Are you sure about this ?')">Delete</a>
-                                    
+                                        <a href="{% url 'edit_staff' staff.id %}" class="btn btn-primary">
+                                            Edit
+                                        </a>
+
+                                        <a href="{% url 'delete_staff' staff.id %}"
+                                        class="btn btn-danger"
+                                        onclick="return confirm('Are you sure?')">
+                                            Delete
+                                        </a>
                                     </td>
                                 </tr>
                                 {% endfor %}

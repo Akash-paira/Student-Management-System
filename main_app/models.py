@@ -92,7 +92,7 @@ class Staff(models.Model):
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return self.admin.email
+        return f"{self.admin.first_name} {self.admin.last_name}"
 
 
 # -------------------------
@@ -105,3 +105,23 @@ class Student(models.Model):
 
     def __str__(self):
         return self.admin.email
+    
+
+#-------------------------
+# Subject
+#------------------------
+class Subject(models.Model):
+    name = models.CharField(max_length=100)
+
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE
+    )
+
+    staff = models.ForeignKey(
+        Staff,
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return self.name

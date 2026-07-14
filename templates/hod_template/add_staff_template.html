@@ -50,7 +50,8 @@
             $.ajax({
                 url: "{% url 'check_email_availability' %}",
                 type: 'POST',
-                data:{email:email}
+                data:{email: email,
+                csrfmiddlewaretoken: "{{ csrf_token }}"}
             }).done(function(response){
                 if (response == "True"){
                     $(".email_error").remove()
