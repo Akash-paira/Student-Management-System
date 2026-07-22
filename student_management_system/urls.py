@@ -76,6 +76,71 @@ urlpatterns = [
             name="delete_subject",
     ),
     path("manage_subject/", hod_views.manage_subject, name="manage_subject"),
+    
+    path(
+    "admin_view_attendance/",
+    hod_views.admin_view_attendance,
+    name="admin_view_attendance",
+    ),
+
+    path(
+    "get_admin_attendance/",
+    hod_views.get_admin_attendance,
+    name="get_admin_attendance",
+    ),
+    path(
+    "get_attendance/",
+    hod_views.get_attendance,
+    name="get_attendance",
+    ),
+    path(
+    "staff_leave_view/",
+    hod_views.view_staff_leave,
+    name="staff_leave_view",
+    ),
+
+    path(
+        "student_leave_view/",
+        hod_views.view_student_leave,
+        name="student_leave_view",
+    ),
+
+    path(
+    "staff_feedback_message/",
+    hod_views.staff_feedback_message,
+    name="staff_feedback_message",
+    ),
+
+    path(
+        "student_feedback_message/",
+        hod_views.student_feedback_message,
+        name="student_feedback_message",
+    ),
+
+        # Notification
+    path(
+        "staff_notification/",
+        hod_views.staff_notification,
+        name="staff_notification",
+    ),
+
+    path(
+        "student_notification/",
+        hod_views.student_notification,
+        name="student_notification",
+    ),
+
+    path(
+        "send_staff_notification/",
+        hod_views.send_staff_notification,
+        name="send_staff_notification",
+    ),
+
+    path(
+        "send_student_notification/",
+        hod_views.send_student_notification,
+        name="send_student_notification",
+    ),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

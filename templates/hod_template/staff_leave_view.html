@@ -117,11 +117,12 @@
                 if (status == '1' || status == '-1'){
 
     $.ajax({
-        url: "{% url 'view_staff_leave' %}",
+        url: "{% url 'staff_leave_view' %}",
         type:'POST',
         data:{
               id:id,
-              status:status
+              status:status,
+              csrfmiddlewaretoken: '{{ csrf_token }}'
         }
     }).done(function(response){
         if (response == "True"){

@@ -245,7 +245,8 @@ class StaffForm(forms.Form):
     gender = forms.ChoiceField(
         choices=[
             ("Male", "Male"),
-            ("Female", "Female")
+            ("Female", "Female"),
+            ("Others", "Others")
         ],
         widget=forms.Select(attrs={"class": "form-control"})
     )
@@ -283,6 +284,7 @@ class StudentForm(forms.Form):
         choices=[
             ("Male", "Male"),
             ("Female", "Female"),
+            ("Others", "Others")
         ],
         widget=forms.Select(attrs={"class": "form-control"})
     )

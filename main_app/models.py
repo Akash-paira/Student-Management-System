@@ -125,3 +125,103 @@ class Subject(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Attendance(models.Model):
+
+    session = models.ForeignKey(
+        Session,
+        on_delete=models.DO_NOTHING
+    )
+
+    subject = models.ForeignKey(
+        Subject,
+        on_delete=models.DO_NOTHING
+    )
+
+    date = models.DateField()
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return f"{self.subject.name} - {self.date}"
+
+
+class AttendanceReport(models.Model):
+
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.DO_NOTHING
+    )
+
+    attendance = models.ForeignKey(
+        Attendance,
+        on_delete=models.CASCADE
+    )
+
+    status = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return f"{self.student.admin.first_name} - {self.attendance.date}"
+
+#Leave Section
+
+class LeaveReportStudent(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    date = models.CharField(max_length=60)
+    message = models.TextField()
+    status = models.SmallIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class LeaveReportStaff(models.Model):
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    date = models.CharField(max_length=60)
+    message = models.TextField()
+    status = models.SmallIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class FeedbackStudent(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    feedback = models.TextField()
+    reply = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class FeedbackStaff(models.Model):
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    feedback = models.TextField()
+    reply = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class NotificationStaff(models.Model):
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class NotificationStudent(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

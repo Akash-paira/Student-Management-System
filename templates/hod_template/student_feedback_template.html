@@ -114,7 +114,8 @@
                     type:'POST',
                     data:{
                           id:id,
-                          reply:reply
+                          reply:reply,
+                          csrfmiddlewaretoken: "{{ csrf_token }}"
                     }
                 }).done(function(response){
                     if (response == "True"){

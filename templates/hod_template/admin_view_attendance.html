@@ -117,14 +117,15 @@
                 url: "{% url 'get_attendance' %}",
                 type: 'POST',
                 data:{
-                    subject:subject,
-                    session:session
-                }
+                    subject: subject,
+                    session: session,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                     }
             
             }
 
             ).done(function(response){
-                var json_data = JSON.parse(response)
+                var json_data = response
                 if (json_data.length > 0){
 
                     var html = "";
@@ -173,10 +174,12 @@ if (attendance_date.length  == 0){
                 data: {
                     attendance_date_id:attendance_date,
                     session:session,
-                    subject:subject
+                    subject:subject,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
                 }
             }).done(function (response) {
-                var json_data = JSON.parse(response)
+                var json_data = response
+                console.log(json_data)
                 if (json_data.length < 1) {
                     alert("No data to display")
 

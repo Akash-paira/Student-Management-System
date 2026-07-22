@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from main_app.models import Session, Student, Staff, Course,CustomUser
+from main_app.models import Session, Student, Staff, Course,CustomUser, NotificationStaff, NotificationStudent
 from main_app.forms import CourseForm, StudentForm, SubjectForm
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -9,7 +9,8 @@ from django.urls import reverse
 from main_app.forms import StaffForm
 from django.contrib.auth.hashers import make_password
 from main_app.forms import StaffForm
-from main_app.models import Subject
+from main_app.models import Subject, Attendance, AttendanceReport, LeaveReportStaff, LeaveReportStudent, FeedbackStaff, FeedbackStudent
+import json
 
 
 def admin_home(request):
@@ -18,7 +19,7 @@ def admin_home(request):
         "total_students": Student.objects.count(),
         "total_staff": Staff.objects.count(),
         "total_course": Course.objects.count(),
-        "total_subject": 0,
+        "total_subject": Subject.objects.count(),
         "attendance_list": [],
         "subject_list": [],
     }
@@ -307,8 +308,9 @@ def update_staff(request, staff_id):
         admin.address = request.POST.get("address")
 
         # Password (Update only if entered)
-        password = request.POST.get("password")
-        if password.strip():
+        password = request.POST.get("password", "").strip()
+
+        if password:
             admin.set_password(password)
 
         # Profile Picture
@@ -679,3 +681,264 @@ def delete_subject(request, subject_id):
         )
 
     return redirect("manage_subject")
+
+def admin_view_attendance(request):
+
+    subjects = Subject.objects.all()
+    sessions = Session.objects.all()
+
+    context = {
+        "subjects": subjects,
+        "sessions": sessions,
+        "page_title": "View Attendance",
+    }
+
+    return render(
+        request,
+        "hod_template/admin_view_attendance.html",
+        context,
+    )
+
+def get_admin_attendance(request):
+    if request.method != "POST":
+        return HttpResponse("Invalid Request")
+
+    attendance_date_id = request.POST.get("attendance_date_id")
+    subject_id = request.POST.get("subject")
+    session_id = request.POST.get("session")
+
+    try:
+        attendance = Attendance.objects.get(
+            id=attendance_date_id,
+            subject_id=subject_id,
+            session_id=session_id
+        )
+
+        attendance_data = AttendanceReport.objects.filter(
+            attendance=attendance
+        ).select_related("student__admin")
+
+        data = []
+
+        for report in attendance_data:
+            data.append({
+                "id": report.student.id,
+                "name": report.student.admin.first_name + " " + report.student.admin.last_name,
+                "status": str(report.status)
+            })
+
+        return HttpResponse(json.dumps(data), content_type="application/json")
+
+    except Attendance.DoesNotExist:
+        return HttpResponse(json.dumps([]), content_type="application/json")
+
+def get_attendance(request):
+    if request.method != "POST":
+        return HttpResponse("Invalid Request")
+
+    subject_id = request.POST.get("subject")
+    session_id = request.POST.get("session")
+
+    try:
+        attendance = Attendance.objects.filter(
+            subject_id=subject_id,
+            session_id=session_id
+        ).order_by("-date")
+
+        data = []
+
+        for att in attendance:
+            data.append({
+                "id": att.id,
+                "attendance_date": str(att.date)
+            })
+
+        return HttpResponse(
+            json.dumps(data),
+            content_type="application/json"
+        )
+
+    except Exception:
+        return HttpResponse(
+            json.dumps([]),
+            content_type="application/json"
+        )
+
+def view_staff_leave(request):
+    if request.method != "POST":
+        allLeave = LeaveReportStaff.objects.all().select_related("staff__admin")
+
+        context = {
+            "allLeave": allLeave,
+            "page_title": "Leave Applications From Staff",
+        }
+
+        return render(
+            request,
+            "hod_template/staff_leave_view.html",
+            context,
+        )
+
+    id = request.POST.get("id")
+    status = request.POST.get("status")
+
+    if status == "1":
+        status = 1
+    else:
+        status = -1
+
+    leave = get_object_or_404(LeaveReportStaff, id=id)
+    leave.status = status
+    leave.save()
+
+    return HttpResponse("True")
+
+def view_student_leave(request):
+    if request.method != "POST":
+        allLeave = LeaveReportStudent.objects.all().select_related("student__admin")
+
+        context = {
+            "allLeave": allLeave,
+            "page_title": "Leave Applications From Students",
+        }
+
+        return render(
+            request,
+            "hod_template/student_leave_view.html",
+            context,
+        )
+
+    id = request.POST.get("id")
+    status = request.POST.get("status")
+
+    if status == "1":
+        status = 1
+    else:
+        status = -1
+
+    leave = get_object_or_404(LeaveReportStudent, id=id)
+    leave.status = status
+    leave.save()
+
+    return HttpResponse("True")
+
+
+def staff_feedback_message(request):
+    if request.method != "POST":
+        feedbacks = FeedbackStaff.objects.select_related("staff__admin").all()
+
+        context = {
+            "feedbacks": feedbacks,
+            "page_title": "Staff Feedback Messages",
+        }
+
+        return render(
+            request,
+            "hod_template/staff_feedback_template.html",
+            context,
+        )
+
+    feedback_id = request.POST.get("id")
+    reply = request.POST.get("reply")
+
+    try:
+        feedback = get_object_or_404(FeedbackStaff, id=feedback_id)
+        feedback.reply = reply
+        feedback.save()
+        return HttpResponse("True")
+    except Exception:
+        return HttpResponse("False")
+
+def student_feedback_message(request):
+    if request.method != "POST":
+        feedbacks = FeedbackStudent.objects.select_related("student__admin").all()
+
+        context = {
+            "feedbacks": feedbacks,
+            "page_title": "Student Feedback Messages",
+        }
+
+        return render(
+            request,
+            "hod_template/student_feedback_template.html",
+            context,
+        )
+
+    feedback_id = request.POST.get("id")
+    reply = request.POST.get("reply")
+
+    try:
+        feedback = get_object_or_404(FeedbackStudent, id=feedback_id)
+        feedback.reply = reply
+        feedback.save()
+        return HttpResponse("True")
+    except Exception:
+        return HttpResponse("False")
+
+def staff_notification(request):
+    allStaff = CustomUser.objects.filter(user_type=2)
+
+    context = {
+        "allStaff": allStaff,
+        "page_title": "Send Notification To Staff",
+    }
+
+    return render(
+        request,
+        "hod_template/staff_notification.html",
+        context,
+    )
+
+def send_staff_notification(request):
+    if request.method != "POST":
+        return HttpResponse("False")
+
+    staff_id = request.POST.get("id")
+    message = request.POST.get("message")
+
+    try:
+        staff = get_object_or_404(Staff, admin_id=staff_id)
+
+        NotificationStaff.objects.create(
+            staff=staff,
+            message=message,
+        )
+
+        return HttpResponse("True")
+
+    except Exception:
+        return HttpResponse("False")
+
+def student_notification(request):
+    students = CustomUser.objects.filter(user_type=3)
+
+    context = {
+        "students": students,
+        "page_title": "Send Notification To Students",
+    }
+
+    return render(
+        request,
+        "hod_template/student_notification.html",
+        context,
+    )
+
+def send_student_notification(request):
+    if request.method != "POST":
+        return HttpResponse("False")
+
+    student_id = request.POST.get("id")
+    message = request.POST.get("message")
+
+    try:
+        student = get_object_or_404(Student, admin_id=student_id)
+
+        NotificationStudent.objects.create(
+            student=student,
+            message=message,
+        )
+
+        return HttpResponse("True")
+
+    except Exception:
+        return HttpResponse("False")
