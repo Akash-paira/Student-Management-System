@@ -15,6 +15,8 @@
 
                     <!-- /.card-header -->
                     <!-- form start -->
+                     <form>
+                         {% csrf_token %}
                     <div class="card-body">
 
 
@@ -64,6 +66,8 @@
         </div>
     </div>
 </section>
+
+</form>
 {% endblock content %}
 
 
@@ -83,12 +87,15 @@ if (subject.length  == 0 || session.length == 0){
             $.ajax({
                 url: "{% url 'get_students' %}",
                 type: 'POST',
+                 headers: {
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                },
                 data: {
                     subject: subject,
                     session: session
                 }
             }).done(function (response) {
-                var json_data = JSON.parse(response)
+                var json_data = response
                 if (json_data.length < 1) {
                     alert("No data to display")
                 } else {
@@ -126,6 +133,10 @@ if (subject.length  == 0 || session.length == 0){
                 $.ajax({
                     url: "{% url 'save_attendance' %}",
                     type: 'POST',
+
+                    headers: {
+                            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                        },
                     data: {
                         date: attendance_date,
                         student_ids: student_data,
@@ -134,7 +145,7 @@ if (subject.length  == 0 || session.length == 0){
             
                     }
                 }).done(function (response) {
-                    if (response == 'OK'){
+                    if (response === 'OK'){
                         alert("Saved")
                     }else{
                         alert("Error. Please try again")
