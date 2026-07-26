@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Admin, Course, Session, Staff, Student, Subject, Attendance, AttendanceReport
+from .models import * 
 
 
 class CustomUserAdmin(UserAdmin):

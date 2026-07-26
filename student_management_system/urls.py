@@ -17,7 +17,7 @@ urlpatterns = [
     path("hod/home/", hod_views.admin_home, name="admin_home"),
 
     path("hod/home/add_course/", hod_views.add_course, name="add_course"),
-    path("hod/home/save_course/", hod_views.save_course, name="save_course"),
+    path("save_course/", hod_views.save_course, name="save_course"),
     path("hod/home/manage_course/", hod_views.manage_course, name="manage_course"),
     path("hod/home/edit_course/<str:course_id>/", hod_views.edit_course, name="edit_course"),
     path("hod/home/delete_course/<str:course_id>/", hod_views.delete_course, name="delete_course"),
@@ -27,7 +27,7 @@ urlpatterns = [
     path("hod/home/manage_session/", hod_views.manage_session, name="manage_session"),
     path("hod/home/edit_session/<str:session_id>/", hod_views.edit_session, name="edit_session"),
     path("hod/home/update_session/<str:session_id>/", hod_views.update_session, name="update_session"),
-    path("hod/home/delete_session/<str:session_id>/", hod_views.delete_session, name="delete_session"),
+    path("delete_session/<str:session_id>/", hod_views.delete_session, name="delete_session"),
     path("logout/", views.logout_user, name="user_logout"),
     path("hod/home/add_staff/", hod_views.add_staff, name="add_staff"),
     path("hod/home/save_staff/", hod_views.save_staff, name="save_staff"),
