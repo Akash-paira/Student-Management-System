@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse, request
 import json
 from django.contrib import messages
+from django.urls import reverse
 # from requests import session
 from main_app.models import *
 from main_app.EmailBackend import EmailBackend
@@ -300,3 +301,59 @@ def update_attendance(request):
     except Exception as e:
         print(e)
         return HttpResponse("ERR")
+
+
+def staff_apply_leave(request):
+    staff = get_object_or_404(
+        Staff,
+        admin=request.user
+    )
+
+    form = StaffLeaveForm()
+
+    leave_history = LeaveReportStaff.objects.filter(
+        staff=staff
+    ).order_by("-created_at")
+
+    context = {
+        "form": form,
+        "leave_history": leave_history,
+        "action_path": reverse("staff_apply_leave_save"),
+        "page_title": "Apply for Leave",
+    }
+
+    return render(
+        request,
+        "staff_template/staff_apply_leave.html",
+        context,
+    )
+
+
+def staff_apply_leave_save(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Request")
+        return redirect("staff_apply_leave")
+
+    form = StaffLeaveForm(request.POST)
+
+    if form.is_valid():
+        staff = get_object_or_404(
+            Staff,
+            admin=request.user
+        )
+
+        leave = LeaveReportStaff(
+            staff=staff,
+            date=form.cleaned_data["leave_date"],
+            message=form.cleaned_data["message"],
+            status=0
+        )
+
+        leave.save()
+
+        messages.success(request, "Leave applied successfully.")
+
+    else:
+        messages.error(request, "Please fill all fields correctly.")
+
+    return redirect("staff_apply_leave")

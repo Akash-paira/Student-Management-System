@@ -197,6 +197,16 @@ urlpatterns = [
         name="update_attendance",
     ),
 
+    path(
+        "staff/leave/apply/",
+        staff_views.staff_apply_leave,
+        name="staff_apply_leave",
+    ),
+    path(
+        "staff/leave/save/",
+        staff_views.staff_apply_leave_save,
+        name="staff_apply_leave_save",
+    ),
     # path(
     #     "staff/result/add/",
     #     staff_views.staff_add_result,
@@ -215,11 +225,6 @@ urlpatterns = [
     #     name="fetch_student_result",
     # ),
 
-    # path(
-    #     "staff/apply/leave/",
-    #     staff_views.staff_apply_leave,
-    #     name="staff_apply_leave",
-    # ),
 
     # path(
     #     "staff/feedback/",
