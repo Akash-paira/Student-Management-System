@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, request
 import json
 from django.contrib import messages
 # from requests import session
@@ -197,3 +197,106 @@ def save_attendance(request):
             },
             status=500
         )
+
+def staff_update_attendance(request):
+    staff = get_object_or_404(
+        Staff,
+        admin=request.user
+    )
+
+    subjects = Subject.objects.filter(
+        staff=staff
+    ).order_by("name")
+
+    sessions = Session.objects.all()
+
+    context = {
+        "page_title": "Update Attendance",
+        "subjects": subjects,
+        "sessions": sessions,
+    }
+
+    return render(
+        request,
+        "staff_template/staff_update_attendance.html",
+        context
+    )
+
+def get_attendance(request):
+    if request.method != "POST":
+        return JsonResponse([], safe=False)
+
+    subject_id = request.POST.get("subject")
+    session_id = request.POST.get("session")
+
+    subject = get_object_or_404(Subject, id=subject_id)
+    session = get_object_or_404(Session, id=session_id)
+
+    attendance = Attendance.objects.filter(
+        subject=subject,
+        session=session
+    ).order_by("-date")
+
+    data = []
+
+    for att in attendance:
+        data.append({
+            "id": att.id,
+            "attendance_date": str(att.date)
+        })
+
+    return JsonResponse(data, safe=False)
+
+
+def get_student_attendance(request):
+    if request.method != "POST":
+        return JsonResponse([], safe=False)
+
+    attendance_id = request.POST.get("attendance_date_id")
+
+    attendance = get_object_or_404(
+        Attendance,
+        id=attendance_id
+    )
+
+    reports = AttendanceReport.objects.filter(
+        attendance=attendance
+    ).select_related("student__admin")
+
+    data = []
+
+    for report in reports:
+        data.append({
+            "id": report.student.id,
+            "name": f"{report.student.admin.first_name} {report.student.admin.last_name}",
+            "status": report.status,
+        })
+
+    attendance_id = request.POST.get("attendance_date_id")
+
+    return JsonResponse(data, safe=False)
+
+def update_attendance(request):
+    if request.method != "POST":
+        return HttpResponse("Invalid Method")
+
+    try:
+        attendance_id = request.POST.get("date")
+        student_data = json.loads(request.POST.get("student_ids"))
+
+        attendance = Attendance.objects.get(id=attendance_id)
+
+        for student in student_data:
+            report = AttendanceReport.objects.get(
+                attendance=attendance,
+                student_id=student["id"]
+            )
+
+            report.status = student["status"]
+            report.save()
+
+        return HttpResponse("OK")
+
+    except Exception as e:
+        print(e)
+        return HttpResponse("ERR")

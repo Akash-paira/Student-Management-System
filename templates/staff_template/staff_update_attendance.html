@@ -16,7 +16,7 @@
                     <!-- /.card-header -->
                     <!-- form start -->
                     <div class="card-body">
-
+                        {% csrf_token %}
 
 
                         <div class="form-group">
@@ -91,6 +91,9 @@
             $.ajax({
                 url: "{% url 'get_attendance' %}",
                 type: 'POST',
+                headers: {
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                },
                 data:{
                     subject:subject,
                     session:session
@@ -99,7 +102,7 @@
             }
 
             ).done(function(response){
-                var json_data = JSON.parse(response)
+                var json_data = response
                 if (json_data.length > 0){
 
                     var html = "";
@@ -141,11 +144,14 @@ if (attendance_date.length  == 0){
             $.ajax({
                 url: "{% url 'get_student_attendance' %}",
                 type: 'POST',
+                headers: {
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                },
                 data: {
                     attendance_date_id:attendance_date,
                 }
             }).done(function (response) {
-                var json_data = JSON.parse(response)
+                var json_data = response
                 if (json_data.length < 1) {
                     alert("No data to display")
             $("#save_attendance").hide()
@@ -184,6 +190,9 @@ if (attendance_date.length  == 0){
             $.ajax({
                 url: "{% url 'update_attendance' %}",
                 type: 'POST',
+                headers: {
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                },
                 data: {
                     date: attendance_date,
                     student_ids: student_data,

@@ -175,23 +175,27 @@ urlpatterns = [
         name="save_attendance",
     ),
 
-    # path(
-    #     "staff/attendance/update/",
-    #     staff_views.staff_update_attendance,
-    #     name="staff_update_attendance",
-    # ),
+    path(
+        "staff/attendance/update/",
+        staff_views.staff_update_attendance,
+        name="staff_update_attendance",
+    ),
+    path(
+        "staff/attendance/fetch/",
+        staff_views.get_attendance,
+        name="get_attendance",
+    ),
+    path(
+        "staff/attendance/get/",
+        staff_views.get_student_attendance,
+        name="get_student_attendance",
+    ),
 
-    # path(
-    #     "staff/attendance/fetch/",
-    #     staff_views.get_student_attendance,
-    #     name="get_student_attendance",
-    # ),
-
-    # path(
-    #     "staff/attendance/update/save/",
-    #     staff_views.update_attendance,
-    #     name="update_attendance",
-    # ),
+    path(
+        "staff/attendance/update/save/",
+        staff_views.update_attendance,
+        name="update_attendance",
+    ),
 
     # path(
     #     "staff/result/add/",
