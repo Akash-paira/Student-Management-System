@@ -161,3 +161,15 @@ def staff_apply_leave_save(request):
 
     messages.success(request, "Temporary Save Function Working!")
     return redirect("staff_apply_leave")
+
+
+class StaffFeedbackForm(forms.Form):
+    feedback = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 5,
+                "placeholder": "Enter your feedback"
+            }
+        )
+    )

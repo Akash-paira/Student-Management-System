@@ -207,30 +207,36 @@ urlpatterns = [
         staff_views.staff_apply_leave_save,
         name="staff_apply_leave_save",
     ),
-    # path(
-    #     "staff/result/add/",
-    #     staff_views.staff_add_result,
-    #     name="staff_add_result",
-    # ),
+    
 
+    path(
+        "staff/feedback/",
+        staff_views.staff_feedback,
+        name="staff_feedback",
+    ),
+    path(
+        "staff/feedback/save/",
+        staff_views.staff_feedback_save,
+        name="staff_feedback_save",
+    ),
     # path(
-    #     "staff/result/edit/",
-    #     EditResultView.as_view(),
-    #     name="edit_student_result",
-    # ),
-
-    # path(
-    #     "staff/result/fetch/",
-    #     staff_views.fetch_student_result,
-    #     name="fetch_student_result",
-    # ),
-
-
-    # path(
-    #     "staff/feedback/",
-    #     staff_views.staff_feedback,
-    #     name="staff_feedback",
-    # ),
+        #     "staff/result/add/",
+        #     staff_views.staff_add_result,
+        #     name="staff_add_result",
+        # ),
+    
+        # path(
+        #     "staff/result/edit/",
+        #     EditResultView.as_view(),
+        #     name="edit_student_result",
+        # ),
+    
+        # path(
+        #     "staff/result/fetch/",
+        #     staff_views.fetch_student_result,
+        #     name="fetch_student_result",
+        # ),
+    
 
     # path(
     #     "staff/view/profile/",

@@ -357,3 +357,55 @@ def staff_apply_leave_save(request):
         messages.error(request, "Please fill all fields correctly.")
 
     return redirect("staff_apply_leave")
+
+def staff_feedback(request):
+    staff = get_object_or_404(
+        Staff,
+        admin=request.user
+    )
+
+    form = StaffFeedbackForm()
+
+    feedback_data = FeedbackStaff.objects.filter(
+        staff=staff
+    ).order_by("-created_at")
+
+    context = {
+        "page_title": "Staff Feedback",
+        "form": form,
+        "feedback_data": feedback_data,
+        "action_path": reverse("staff_feedback_save"),
+    }
+
+    return render(
+        request,
+        "staff_template/staff_feedback.html",
+        context,
+    )
+def staff_feedback_save(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Request")
+        return redirect("staff_feedback")
+
+    form = StaffFeedbackForm(request.POST)
+
+    if form.is_valid():
+        staff = get_object_or_404(
+            Staff,
+            admin=request.user
+        )
+
+        feedback = FeedbackStaff(
+            staff=staff,
+            feedback=form.cleaned_data["feedback"],
+            reply=""
+        )
+
+        feedback.save()
+
+        messages.success(request, "Feedback submitted successfully.")
+
+    else:
+        messages.error(request, "Please fill all fields correctly.")
+
+    return redirect("staff_feedback")

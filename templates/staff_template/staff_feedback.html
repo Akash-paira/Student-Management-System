@@ -13,8 +13,8 @@
                     <div class="card-header">
                         <h3 class="card-title">{{page_title}}</h3>
                     </div>
-
-                    {% include "main_app/form_template.html" with messages=messages  form=form button_text="Submit Feedback"%}
+                    {% include "main_app/form_template.html" with messages=messages form=form button_text="Submit Feedback" action_path=action_path %}
+                    {% comment %} {% include "main_app/form_template.html" with messages=messages  form=form button_text="Submit Feedback"%} {% endcomment %}
                 </div>
                 <!-- /.card -->
 <div class="card card-primary">
@@ -29,7 +29,7 @@
                <th>Reply</th>
             <th>Created At</th>
         </tr>
-        {% for feedback in feedbacks %}
+        {% for feedback in feedback_data %}
         <tr>
             <td>{{forloop.counter}}</td>
             <td>{{feedback.feedback}}</td>
