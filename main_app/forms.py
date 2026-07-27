@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import messages
 from django.shortcuts import redirect
 from .models import Course
-from .models import Session
+from .models import Session, Subject, Student
 from .models import Staff, Course, CustomUser
 
 class CourseForm(forms.ModelForm):
@@ -172,4 +172,42 @@ class StaffFeedbackForm(forms.Form):
                 "placeholder": "Enter your feedback"
             }
         )
+    )
+
+class EditResultForm(forms.Form):
+    session = forms.ModelChoiceField(
+        queryset=Session.objects.all(),
+        widget=forms.Select(attrs={
+            "class": "form-control"
+        })
+    )
+
+    subject = forms.ModelChoiceField(
+        queryset=Subject.objects.none(),
+        widget=forms.Select(attrs={
+            "class": "form-control"
+        })
+    )
+
+    student = forms.ModelChoiceField(
+        queryset=Student.objects.none(),
+        widget=forms.Select(attrs={
+            "class": "form-control"
+        })
+    )
+
+    test = forms.FloatField(
+        widget=forms.NumberInput(attrs={
+            "class": "form-control",
+            "min": 0,
+            "max": 40
+        })
+    )
+
+    exam = forms.FloatField(
+        widget=forms.NumberInput(attrs={
+            "class": "form-control",
+            "min": 0,
+            "max": 60
+        })
     )

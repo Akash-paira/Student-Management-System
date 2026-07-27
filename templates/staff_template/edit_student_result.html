@@ -49,7 +49,7 @@
         $("#id_subject").change(function () {
             fetchStudents();
             });
-            $("#id_session_year").change(function () {
+            $("#id_session").change(function () {
                 fetchStudents();
                 });
    $("#id_student").change(function () {
@@ -62,7 +62,7 @@
                 $('label[for="id_exam"]').hide();
         function fetchStudents(){
             var subject = $("#id_subject").val()
-            var session = $("#id_session_year").val()
+            var session = $("#id_session").val()
             $("#id_student").html(null)
             if (session.length  == 0 || subject.length == 0 || session < 1 || subject < 1){
                 return false;
@@ -72,10 +72,11 @@
                 type: 'POST',
                 data: {
                     subject: subject,
-                    session:session
+                    session:session,
+                    csrfmiddlewaretoken: "{{ csrf_token }}"
                 }
             }).done(function (response) {
-                var json_data = JSON.parse(response)
+                var json_data = response;
                 if (json_data.length < 1) {
                     alert("No data to display")
                 } else {
@@ -110,7 +111,8 @@
                     type: 'POST',
                     data: {
                         subject: subject,
-                        student:student
+                        student:student,
+                        csrfmiddlewaretoken: "{{ csrf_token }}"
                     }
                 }).done(function (response) {
                     if (response == 'False') {

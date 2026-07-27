@@ -49,9 +49,6 @@ def staff_take_attendance(request):
     """
     Display Take Attendance page for logged-in staff.
     """
-    print(request.user)
-    print(request.user.email)
-    print(request.user.id)
     staff = get_object_or_404(
         Staff,
         admin=request.user
@@ -100,22 +97,10 @@ def get_students(request):
             id=session_id
         )
 
-        print("========== DEBUG ==========")
-        print("Subject :", subject.name)
-        print("Course  :", subject.course)
-        print("Session :", session)
-
         students = Student.objects.filter(
             course=subject.course,
             session=session
         )
-
-        print("Students Count :", students.count())
-
-        for student in students:
-            print(student.admin.first_name, student.admin.last_name)
-
-        print("===========================")
 
         student_list = []
 
@@ -430,3 +415,104 @@ def staff_view_notification(request):
         "staff_template/staff_view_notification.html",
         context,
     )
+
+def staff_add_result(request):
+    staff = get_object_or_404(
+        Staff,
+        admin=request.user
+    )
+
+    subjects = Subject.objects.filter(
+        staff=staff
+    )
+
+    sessions = Session.objects.all()
+
+    context = {
+        "page_title": "Result Upload",
+        "subjects": subjects,
+        "sessions": sessions,
+    }
+
+    if request.method == "POST":
+        try:
+            student_id = request.POST.get("student_list")
+            subject_id = request.POST.get("subject")
+            test = request.POST.get("test")
+            exam = request.POST.get("exam")
+
+            student = get_object_or_404(
+                Student,
+                id=student_id
+            )
+
+            subject = get_object_or_404(
+                Subject,
+                id=subject_id
+            )
+
+            result, created = StudentResult.objects.get_or_create(
+                student=student,
+                subject=subject,
+                defaults={
+                    "test": test,
+                    "exam": exam,
+                }
+            )
+
+            if not created:
+                result.test = test
+                result.exam = exam
+                result.save()
+                messages.success(request, "Result updated successfully.")
+            else:
+                messages.success(request, "Result saved successfully.")
+
+        except Exception as e:
+            messages.error(request, f"Error: {e}")
+
+    return render(
+        request,
+        "staff_template/staff_add_result.html",
+        context,
+    )
+
+import json
+from django.http import HttpResponse
+
+
+def fetch_student_result(request):
+    if request.method != "POST":
+        return HttpResponse("False")
+
+    try:
+        subject_id = request.POST.get("subject")
+        student_id = request.POST.get("student")
+
+        student = get_object_or_404(
+            Student,
+            id=student_id
+        )
+
+        subject = get_object_or_404(
+            Subject,
+            id=subject_id
+        )
+
+        result = StudentResult.objects.get(
+            student=student,
+            subject=subject
+        )
+
+        data = {
+            "test": result.test,
+            "exam": result.exam,
+        }
+
+        return HttpResponse(json.dumps(data))
+
+    except StudentResult.DoesNotExist:
+        return HttpResponse("False")
+
+    except Exception:
+        return HttpResponse("False")

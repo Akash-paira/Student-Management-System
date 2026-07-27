@@ -3,6 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http import HttpResponse
+from main_app.EditResultView import *
 
 from . import views, hod_views, staff_views, student_views
 
@@ -222,6 +223,27 @@ urlpatterns = [
         "staff/view/notification/",
         staff_views.staff_view_notification,
         name="staff_view_notification",
+    ),
+
+    path(
+        "staff/student/fetch/",
+        staff_views.get_students,
+        name="get_students",
+    ),
+    path(
+        "staff/result/add/",
+        staff_views.staff_add_result,
+        name="staff_add_result",
+    ),
+    path(
+        "staff/result/edit/",
+        EditResultView.as_view(),
+        name="edit_student_result",
+    ),
+    path(
+        "staff/result/fetch/",
+        staff_views.fetch_student_result,
+        name="fetch_student_result",
     ),
 
 ]

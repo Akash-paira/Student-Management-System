@@ -225,3 +225,21 @@ class NotificationStudent(models.Model):
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class StudentResult(models.Model):
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE
+    )
+    subject = models.ForeignKey(
+        Subject,
+        on_delete=models.CASCADE
+    )
+    test = models.FloatField(default=0)
+    exam = models.FloatField(default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.student.admin.get_full_name()} - {self.subject.name}"
