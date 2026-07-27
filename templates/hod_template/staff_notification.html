@@ -138,6 +138,8 @@
     })
       .done(function (response) {
         if (response == "True") {
+          $("#message").val("");
+          $("#myModal").modal("hide");
           alert("Notification Sent");
           location.reload();
         } else {

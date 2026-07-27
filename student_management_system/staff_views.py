@@ -409,3 +409,24 @@ def staff_feedback_save(request):
         messages.error(request, "Please fill all fields correctly.")
 
     return redirect("staff_feedback")
+
+def staff_view_notification(request):
+    staff = get_object_or_404(
+        Staff,
+        admin=request.user
+    )
+
+    notifications = NotificationStaff.objects.filter(
+        staff=staff
+    ).order_by("-created_at")
+
+    context = {
+        "page_title": "View Notifications",
+        "notifications": notifications,
+    }
+
+    return render(
+        request,
+        "staff_template/staff_view_notification.html",
+        context,
+    )

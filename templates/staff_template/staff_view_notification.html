@@ -30,12 +30,21 @@
                       <th>Date</th>
                       <th>Message</th>
                   </tr>
-                  {% for notification in  notifications %}
+                  {% for notification in notifications %}
                     <tr>
-                        <td>{{forloop.counter}}</td>
-                        <td>{{notification.created_at}}</td>
-                        <td>{{notification.message}}</td>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ notification.created_at|date:"d M Y, h:i A" }}</td>
+                        <td>{{ notification.message }}</td>
                     </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            No Notifications Found
+                        </td>
+                    </tr>
+
                   {% endfor %}
               </table>
                         </div>
