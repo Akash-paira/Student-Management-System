@@ -211,3 +211,44 @@ class EditResultForm(forms.Form):
             "max": 60
         })
     )
+
+class StaffEditForm(forms.Form):
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+
+    gender = forms.ChoiceField(
+        choices=[
+            ("Male", "Male"),
+            ("Female", "Female"),
+        ],
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+    address = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 3,
+            }
+        )
+    )
+
+    profile_pic = forms.ImageField(
+        required=False,
+        widget=forms.FileInput(attrs={"class": "form-control"})
+    )
+
+    password = forms.CharField(
+        required=False,
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Leave blank to keep current password",
+            }
+        )
+    )

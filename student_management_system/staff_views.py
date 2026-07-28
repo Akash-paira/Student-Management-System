@@ -516,3 +516,54 @@ def fetch_student_result(request):
 
     except Exception:
         return HttpResponse("False")
+
+def staff_view_profile(request):
+    staff = get_object_or_404(
+        Staff,
+        admin=request.user
+    )
+
+    if request.method == "POST":
+        form = StaffEditForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            admin = staff.admin
+
+            admin.first_name = form.cleaned_data["first_name"]
+            admin.last_name = form.cleaned_data["last_name"]
+            admin.gender = form.cleaned_data["gender"]
+            admin.address = form.cleaned_data["address"]
+
+            password = form.cleaned_data["password"]
+            if password:
+                admin.set_password(password)
+
+            profile_pic = request.FILES.get("media_profile_pic")
+            if "profile_pic" in request.FILES:
+                        admin.profile_pic = request.FILES["profile_pic"]
+
+            admin.save()
+
+            messages.success(request, "Profile Updated Successfully")
+            return redirect("staff_view_profile")
+
+    else:
+        form = StaffEditForm(
+            initial={
+                "first_name": staff.admin.first_name,
+                "last_name": staff.admin.last_name,
+                "gender": staff.admin.gender,
+                "address": staff.admin.address,
+            }
+        )
+
+    context = {
+        "page_title": "View/Update Profile",
+        "form": form,
+    }
+
+    return render(
+        request,
+        "staff_template/staff_view_profile.html",
+        context,
+    )

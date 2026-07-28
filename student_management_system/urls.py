@@ -245,6 +245,11 @@ urlpatterns = [
         staff_views.fetch_student_result,
         name="fetch_student_result",
     ),
+    path(
+        "staff/view/profile/",
+        staff_views.staff_view_profile,
+        name="staff_view_profile",
+    )
 
 ]
 
