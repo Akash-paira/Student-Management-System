@@ -249,7 +249,19 @@ urlpatterns = [
         "staff/view/profile/",
         staff_views.staff_view_profile,
         name="staff_view_profile",
-    )
+    ),
+
+    #------------------------------
+    # Student Panel
+    #------------------------------
+
+    path("student_home/", student_views.student_home, name="student_home"),
+
+    path(
+        "student_view_attendance/",
+        student_views.student_view_attendance,
+        name="student_view_attendance",
+    ),
 
 ]
 

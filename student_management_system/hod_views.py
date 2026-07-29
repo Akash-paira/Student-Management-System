@@ -281,7 +281,7 @@ def edit_staff(request, staff_id):
         "form": form,
         "staff_id": staff_id,
         "page_title": "Edit Staff",
-        "action_path": f"/update_staff/{staff_id}/",
+        "action_path": reverse("update_staff", kwargs={"staff_id": staff_id}),
     }
 
     return render(
