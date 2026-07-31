@@ -31,8 +31,12 @@
             <td>{{ result.test }}</td>
             <td>{{ result.exam }}</td>
             <td>{{ result.test|add:result.exam }}</td>
-            </tr>
-            {% endfor %}
+        </tr>
+        {%empty%}
+        <tr>
+            <td colspan="5">No results found.</td>
+        </tr>
+        {% endfor %}
         </table>
     </div>
     </div>

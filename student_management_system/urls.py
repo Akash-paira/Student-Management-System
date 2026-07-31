@@ -51,10 +51,10 @@ urlpatterns = [
     # Subject Management
 
     path(
-    "hod/home/add_subject/",
-    hod_views.add_subject,
-    name="add_subject",
-),
+        "hod/home/add_subject/",
+        hod_views.add_subject,
+        name="add_subject",
+    ),
 
     path(
         "hod/home/save_subject/",
@@ -63,10 +63,10 @@ urlpatterns = [
     ),
 
     path(
-    "hod/home/edit_subject/<str:subject_id>/",
-    hod_views.edit_subject,
-    name="edit_subject",
-),
+        "hod/home/edit_subject/<str:subject_id>/",
+        hod_views.edit_subject,
+        name="edit_subject",
+    ),
 
     path(
             "hod/home/update_subject/<str:subject_id>/",
@@ -261,6 +261,21 @@ urlpatterns = [
         "student_view_attendance/",
         student_views.student_view_attendance,
         name="student_view_attendance",
+    ),
+    path(
+        "student_view_result/",
+        student_views.student_view_result,
+        name="student_view_result",
+    ),
+    path(
+        "student_apply_leave/",
+        student_views.student_apply_leave,
+        name="student_apply_leave",
+    ),
+    path(
+        "student_apply_leave_save/",
+        student_views.student_apply_leave_save,
+        name="student_apply_leave_save"
     ),
 
 ]

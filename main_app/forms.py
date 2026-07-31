@@ -252,3 +252,27 @@ class StaffEditForm(forms.Form):
             }
         )
     )
+
+class StudentLeaveForm(forms.Form):
+    leave_date = forms.CharField(
+        widget=forms.DateInput(attrs={
+            "type": "date",
+            "class": "form-control"
+        })
+    )
+
+    message = forms.CharField(
+        widget=forms.Textarea(attrs={
+            "class": "form-control",
+            "rows": 5,
+            "placeholder": "Enter your reason for leave"
+        })
+    )
+
+def student_apply_leave_save(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Method")
+        return redirect("student_apply_leave")
+
+    messages.success(request, "Temporary Save Function Working!")
+    return redirect("student_apply_leave")

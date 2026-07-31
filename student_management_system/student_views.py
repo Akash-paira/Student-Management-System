@@ -5,6 +5,9 @@ from datetime import datetime
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
+from django.urls import reverse
+from main_app.forms import *
 
 def student_home(request):
     student = get_object_or_404(
@@ -156,3 +159,72 @@ def student_view_attendance(request):
             },
             status=400,
         )
+
+def student_view_result(request):
+    student = get_object_or_404(
+        Student,
+        admin=request.user
+    )
+
+    results = StudentResult.objects.filter(
+        student=student
+    ).select_related("subject")
+
+    context = {
+        "page_title": "View Results",
+        "results": results,
+    }
+
+    return render(
+        request,
+        "student_template/student_view_result.html",
+        context,
+    )
+
+def student_apply_leave(request):
+    student = get_object_or_404(Student, admin=request.user)
+
+    form = StudentLeaveForm()
+
+    context = {
+        "page_title": "Apply For Leave",
+        "form": form,
+        "leave_history": LeaveReportStudent.objects.filter(
+            student=student
+        ).order_by("-created_at"),
+    }
+
+    return render(
+        request,
+        "student_template/student_apply_leave.html",
+        context,
+    )
+
+def student_apply_leave_save(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Request")
+        return redirect("student_apply_leave")
+
+    form = StudentLeaveForm(request.POST)
+
+    if form.is_valid():
+        student = get_object_or_404(
+            Student,
+            admin=request.user
+        )
+
+        leave = LeaveReportStudent(
+            student=student,
+            date=form.cleaned_data["leave_date"],
+            message=form.cleaned_data["message"],
+            status=0
+        )
+
+        leave.save()
+
+        messages.success(request, "Leave applied successfully.")
+
+    else:
+        messages.error(request, "Please fill all fields correctly.")
+
+    return redirect("student_apply_leave")
