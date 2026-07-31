@@ -22,7 +22,7 @@ urlpatterns = [
     path("hod/home/manage_course/", hod_views.manage_course, name="manage_course"),
     path("hod/home/edit_course/<str:course_id>/", hod_views.edit_course, name="edit_course"),
     path("hod/home/delete_course/<str:course_id>/", hod_views.delete_course, name="delete_course"),
-    path("hod/home/update_course/<str:course_id>/", hod_views.update_course, name="update_course"),
+    path("update_course/<str:course_id>/", hod_views.update_course, name="update_course"),
     path("hod/home/add_session/", hod_views.add_session, name="add_session"),
     path("hod/home/save_session/", hod_views.save_session, name="save_session"),
     path("hod/home/manage_session/", hod_views.manage_session, name="manage_session"),
@@ -276,6 +276,27 @@ urlpatterns = [
         "student_apply_leave_save/",
         student_views.student_apply_leave_save,
         name="student_apply_leave_save"
+    ),
+    path(
+        "student_feedback/",
+        student_views.student_feedback,
+        name="student_feedback",
+    ),
+
+    path(
+        "student_feedback_save/",
+        student_views.student_feedback_save,
+        name="student_feedback_save",
+    ),
+    path(
+        "student_view_profile/",
+        student_views.student_view_profile,
+        name="student_view_profile",
+    ),
+    path(
+        "student_view_notification/",
+        student_views.student_view_notification,
+        name="student_view_notification",
     ),
 
 ]

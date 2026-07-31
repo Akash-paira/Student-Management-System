@@ -13,7 +13,7 @@
                     <div class="card-header">
                         <h3 class="card-title">{{page_title}}</h3>
                     </div>
-                    {% include "main_app/form_template.html" with form=form button_text="Apply For Leave" action_path="student_apply_leave_save" %}
+                    {% include "main_app/form_template.html" with form=form button_text="Apply For Leave" action_path="/student_apply_leave_save/" %}
                     {% comment %} {% include "main_app/form_template.html" with messages=messages  form=form button_text="Apply For Leave"%} {% endcomment %}
                 </div>
                 <!-- /.card -->

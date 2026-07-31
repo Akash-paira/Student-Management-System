@@ -228,3 +228,150 @@ def student_apply_leave_save(request):
         messages.error(request, "Please fill all fields correctly.")
 
     return redirect("student_apply_leave")
+
+def student_feedback(request):
+    student = get_object_or_404(
+        Student,
+        admin=request.user
+    )
+
+    form = FeedbackStudentForm()
+
+    context = {
+        "page_title": "Student Feedback",
+        "form": form,
+        "feedbacks": FeedbackStudent.objects.filter(
+            student=student
+        ).order_by("-created_at"),
+    }
+
+    return render(
+        request,
+        "student_template/student_feedback.html",
+        context,
+    )
+
+def student_feedback_save(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Method")
+        return redirect("student_feedback")
+
+    form = FeedbackStudentForm(request.POST)
+
+    if form.is_valid():
+        feedback = form.cleaned_data["feedback"]
+
+        try:
+            student = Student.objects.get(admin=request.user)
+
+            FeedbackStudent.objects.create(
+                student=student,
+                feedback=feedback,
+                reply=""
+            )
+
+            messages.success(
+                request,
+                "Feedback submitted successfully."
+            )
+
+        except Exception:
+            messages.error(
+                request,
+                "Could not submit feedback."
+            )
+
+    else:
+        messages.error(
+            request,
+            "Form is invalid."
+        )
+
+    return redirect("student_feedback")
+
+def student_view_profile(request):
+    student = get_object_or_404(
+        Student,
+        admin=request.user
+    )
+
+    if request.method == "POST":
+        form = StudentEditForm(
+            request.POST,
+            request.FILES
+        )
+
+        if form.is_valid():
+
+            admin = student.admin
+
+            admin.first_name = form.cleaned_data["first_name"]
+            admin.last_name = form.cleaned_data["last_name"]
+            admin.gender = form.cleaned_data["gender"]
+            admin.address = form.cleaned_data["address"]
+
+            password = form.cleaned_data.get("password")
+            if password:
+                admin.set_password(password)
+
+            profile_pic = request.FILES.get("profile_pic")
+            if profile_pic:
+                admin.profile_pic = profile_pic
+
+            admin.save()
+            student.save()
+
+            messages.success(
+                request,
+                "Profile Updated Successfully."
+            )
+
+            if password:
+                return redirect("login")
+
+            return redirect("student_view_profile")
+
+        messages.error(
+            request,
+            "Please correct the errors below."
+        )
+
+    else:
+        form = StudentEditForm(initial={
+            "first_name": student.admin.first_name,
+            "last_name": student.admin.last_name,
+            "gender": student.admin.gender,
+            "address": student.admin.address,
+        })
+
+    context = {
+        "page_title": "View/Edit Profile",
+        "form": form,
+    }
+
+    return render(
+        request,
+        "student_template/student_view_profile.html",
+        context,
+    )
+
+def student_view_notification(request):
+    student = get_object_or_404(
+        Student,
+        admin=request.user
+    )
+
+    notifications = NotificationStudent.objects.filter(
+        student=student
+    ).order_by("-created_at")
+
+    context = {
+        "page_title": "View Notifications",
+        "notifications": notifications,
+    }
+
+    return render(
+        request,
+        "student_template/student_view_notification.html",
+        context,
+    )

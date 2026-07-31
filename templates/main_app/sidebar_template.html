@@ -442,8 +442,117 @@
                             </a>
                         </li>
                   
-        {% else %}
-        {% endif %}
+                  
+      {% else %}
+          <!-- Brand Logo -->
+          <a href="" class="brand-link">
+              
+              <img src="{% static 'dist/img/AdminLTELogo.png' %} " alt="AdminLTE Logo"
+                  class="brand-image img-circle elevation-3" style="opacity: .8">
+              <span class="brand-text font-weight-light">Student Panel</span>
+          </a>
+
+          <!-- Sidebar -->
+          <div class="sidebar">
+              <!-- Sidebar user panel (optional) -->
+              <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        {% if request.user.profile_pic %}
+                        <img
+                          src="{{ request.user.profile_pic.url }}"
+                          class="img-circle elevation-2"
+                        />
+                        {% else %}
+                        <img
+                          src="{% static 'dist/img/user2-160x160.jpg' %}"
+                          class="img-circle elevation-2"
+                        />
+                        {% endif %}
+                      </div>
+                    <div class="info">
+                        <a href="#" class="d-block">{{ user}}</a>
+                    </div>
+              </div>
+
+              <!-- Sidebar Menu -->
+              <nav class="mt-2">
+                  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                      <li class="nav-item">
+                          {% url 'student_home' as student_home %}
+                          <a href="{{student_home}}" class="nav-link {% if student_home == request.path %} active {% endif %}">
+                              <i class="nav-icon fas fa-th"></i>
+                              <p>
+                                  Home
+
+                              </p>
+                          </a>
+                      </li>
+
+                      <li class="nav-item">
+                          {% url 'student_view_profile' as student_view_profile %}
+                          <a href="{{student_view_profile}}" class="nav-link {% if student_view_profile == request.path %} active {% endif %}">
+                              <i class="nav-icon fas fa-th"></i>
+                              <p>
+                                  View/Edit Profile
+
+                              </p>
+                          </a>
+                      </li>
+
+                      <li class="nav-item">
+                          {% url 'student_view_result' as student_view_result %}
+                          <a href="{% url 'student_view_result' %}" class="nav-link {% if student_view_result == request.path %} active {% endif %}">
+                              <i class="nav-icon fas fa-th"></i>
+                              <p>
+                                  View Results
+                              </p>
+                          </a>
+                      </li>
+                
+                      <li class="nav-item">
+                          {% url 'student_view_attendance' as student_view_attendance %}
+                          <a href="{{student_view_attendance}}" class="nav-link {% if student_view_attendance == request.path %} active {% endif %}">
+                              <i class="nav-icon fas fa-th"></i>
+                              <p>View Attendance</p>
+                          </a>
+                      </li>
+
+                      <li class="nav-item">
+                          {% url 'student_view_notification' as student_view_notification %}
+                          <a href="{{student_view_notification}}" class="nav-link {% if student_view_notification == request.path %} active {% endif %}">
+                              <i class="nav-icon fas fa-th"></i>
+                              <p>
+                                View Notifications
+
+                              </p>
+                          </a>
+                      </li>
+
+                      <li class="nav-item">
+                          {% url 'student_apply_leave' as student_apply_leave %}
+                          <a href="{{student_apply_leave}}" class="nav-link {% if student_apply_leave == request.path %} active {% endif %}">
+                              <i class="nav-icon fas fa-th"></i>
+                              <p>
+                                Apply For Leave
+
+                              </p>
+                          </a>
+                      </li>
+
+                      <li class="nav-item">
+                          {% url 'student_feedback' as student_feedback %}
+                          <a href="{{student_feedback}}" class="nav-link {% if student_feedback == request.path %} active {% endif %}">
+                              <i class="nav-icon fas fa-th"></i>
+                              <p>
+                                Feedback
+
+                              </p>
+                          </a>
+                      </li>
+                
+
+              {% endif %}
 
         <!-- Logout -->
 

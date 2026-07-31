@@ -1,4 +1,4 @@
-<form role="form" method="POST" action="{% url action_path %}" enctype="multipart/form-data">
+<form role="form" method="POST" action="{{ action_path }}"  enctype="multipart/form-data">
 {% comment %} <form role="form" method="POST" action="{{ action_path }}" enctype="multipart/form-data"> {% endcomment %}
     {% csrf_token %}
     <div class="card-body">
